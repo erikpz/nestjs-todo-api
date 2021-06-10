@@ -1,3 +1,4 @@
 export enum Configuration {
-    PORT = 'PORT'
+    PORT = 'PORT',
+    MONGO_URI = 'MONGO_URI'
 }
