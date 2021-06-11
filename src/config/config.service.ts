@@ -22,8 +22,4 @@ export class ConfigService {
       MONGO_URI: process.env.MONGO_URI;
     }
   }
-
-  get(key: string): string {
-    return this.envConfig[key];
-  }
 }
