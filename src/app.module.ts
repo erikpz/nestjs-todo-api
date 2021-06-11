@@ -4,19 +4,14 @@ import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { Configuration } from './config/config.keys';
 import { MongooseModule } from '@nestjs/mongoose';
-
+require('dotenv').config()
 @Module({
   imports: [
     UserModule,
     ConfigModule,
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService)=>({
-        uri:configService.get(Configuration.MONGO_URI),
-        useNewUrlParser:true
-      }),
-      inject: [ConfigService]
-    }),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI
+    ),
   ],
 })
 export class AppModule {
