@@ -1,7 +1,9 @@
-export class UserDTO {
-    name: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    profilePhotoUrl: string;
+export class CreateUserDTO {
+  readonly name: string;
+  readonly lastName: string;
+  readonly userName: string;
+  readonly email: string;
+  readonly password: string;
+  readonly phoneNumber: string;
+  readonly profilePhotoUrl: string;
 }

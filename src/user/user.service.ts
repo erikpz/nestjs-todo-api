@@ -2,21 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/interfaces/user.interface';
-import { UserDTO } from 'src/dto/user.dto';
+import { CreateUserDTO } from 'src/dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-  async getUser(): Promise<User[]> {
+  async getUser(userName: string): Promise<User> {
+    const currUser = await this.userModel.findOne({ userName });
+    return currUser;
+  }
+
+  async getUsers(): Promise<User[]> {
     const currUser = await this.userModel.find();
     return currUser;
   }
 
-  async createUser(newUser: UserDTO): Promise<User> {
+  async createUser(newUser: CreateUserDTO): Promise<User> {
     /* const userCreated = new this.userModel(newUser)
         return await userCreated.save() */
-    const userCreated = await this.userModel.create(newUser);
+    const salt = await bcrypt.genSalt();
+    const cryptPassword = await bcrypt.hash(newUser.password, salt);
+    const userCreated = await this.userModel.create({
+      ...newUser,
+      password: cryptPassword,
+    });
     return userCreated;
   }
 
@@ -25,7 +36,7 @@ export class UserService {
     return userEliminated;
   }
 
-  async updateUser(userId: string, newUser: UserDTO): Promise<User> {
+  async updateUser(userId: string, newUser: CreateUserDTO): Promise<User> {
     const userUpdated = await this.userModel.findByIdAndUpdate(
       userId,
       newUser,
