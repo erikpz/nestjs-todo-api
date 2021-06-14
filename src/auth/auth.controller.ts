@@ -15,8 +15,6 @@ export class AuthController {
   async createUser(@Body() body: CreateUserDTO) {
     const user = await this.userService.createUser(body);
     return {
-      ok: true,
-      status: 201,
       data: {
         name: user.name,
         lastName: user.lastName,
@@ -39,8 +37,6 @@ export class AuthController {
 
     const token = await this.authService.generateAccessToken(userName);
     return {
-      status: 200,
-      ok: true,
       token: token.token,
     };
   }
