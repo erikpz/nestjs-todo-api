@@ -37,7 +37,9 @@ export class AuthController {
 
     const token = await this.authService.generateAccessToken(userName);
     return {
-      token: token.token,
+      data: {
+        token: token.token,
+      },
     };
   }
 }
