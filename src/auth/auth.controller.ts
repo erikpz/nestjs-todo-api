@@ -37,6 +37,11 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
-    return await this.authService.generateAccessToken(userName);
+    const token = await this.authService.generateAccessToken(userName);
+    return {
+      status: 200,
+      ok: true,
+      token: token.token,
+    };
   }
 }

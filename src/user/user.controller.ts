@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserDTO } from 'src/dto/user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -18,13 +17,22 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':userName')
-  async helloUser(@Param('userName') userName) {
+  async getUser(@Param('userName') userName) {
     console.log(userName);
     const user = await this.userService.getUser(userName);
     return {
       ok: true,
       status: 200,
-      data: user,
+      data: {
+        _id: user._id,
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        userName: user.userName,
+        phoneNumber: user.phoneNumber,
+        profilePhotoUrl: user.profilePhotoUrl,
+        createdAt: user.createdAt,
+      },
     };
   }
 }
