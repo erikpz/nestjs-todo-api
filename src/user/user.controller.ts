@@ -6,6 +6,7 @@ import {
   Put,
   Body,
   Param,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,10 +17,9 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':userName')
-  async getUser(@Param('userName') userName) {
-    console.log(userName);
-    const user = await this.userService.getUser(userName);
+  @Get()
+  async getUser(@Request() req: any) {
+    const user = await this.userService.getUser(req.user.userName);
     return {
       ok: true,
       status: 200,
