@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Request
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateTaskDTO } from 'src/dto/task.dto';
@@ -17,9 +18,9 @@ export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':userName')
-  async getTasks(@Param('userName') userName) {
-    const tasks = await this.taskService.getTasks(userName);
+  @Get()
+  async getTasks(@Request() req: any) {
+    const tasks = await this.taskService.getTasks(req.user.userName);
     return {
       ok: true,
       status: 200,
@@ -28,8 +29,8 @@ export class TaskController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':userName/:taskId')
-  async getTask(@Param('taskId') taskId) {
+  @Get('/:taskId')
+  async getTask(@Param('taskId') taskId, @Request() req: any) {
     const tasks = await this.taskService.getTask(taskId);
     return {
       ok: true,
@@ -39,9 +40,9 @@ export class TaskController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':userName/create-task')
-  async createTask(@Param('userName') userName, @Body() body: CreateTaskDTO) {
-    const task = await this.taskService.createTask(userName, body);
+  @Post('/create-task')
+  async createTask(@Request() req: any, @Body() body: CreateTaskDTO) {
+    const task = await this.taskService.createTask(req.user.userName, body);
     return {
       ok: true,
       status: 200,
@@ -50,7 +51,7 @@ export class TaskController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Delete(':userName/delete-task/:taskId')
+  @Delete('/delete-task/:taskId')
   async deleteTask(@Param('taskId') taskId) {
     const task = await this.taskService.deleteTask(taskId);
     return {
@@ -61,7 +62,7 @@ export class TaskController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Put(':userName/update-task/:taskId')
+  @Put('/update-task/:taskId')
   async updateTask(@Param('taskId') taskId, @Body() body: CreateTaskDTO) {
     const task = await this.taskService.updateTask(taskId, body);
     return {
