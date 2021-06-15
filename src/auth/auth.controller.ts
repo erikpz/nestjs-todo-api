@@ -39,6 +39,7 @@ export class AuthController {
     return {
       data: {
         token: token.token,
+        userName,
       },
     };
   }
